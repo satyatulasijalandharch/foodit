@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  frontend:
+    image: mrstjch/foodit-frontend:v1.0
+    ports:
+      - "3000:3000"
+    volumes:
+     - frontend:/app
+    environment:
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+    networks:
+      - foodit
+    depends_on:
+      - backend
+
+  backend:
+    image: mrstjch/foodit-backend:v1.0
+    ports:
+      - "4000:4000"
+      - "587:587"
+    networks:
+      - foodit
+    volumes:
+     - backend:/app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongoData:/data/db
+      - mongoConfig:/data/configdb
+    networks:
+      - foodit
+
+volumes:
+  mongoData:
+  mongoConfig:
+  frontend:
+  backend:
+networks:
+  foodit:
